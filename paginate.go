@@ -59,14 +59,17 @@ func Paginate(qry *mgo.Query, d interface{}, page *Page) (*Page, error) {
 	return &p, nil
 }
 
+// Count is the total returned for the query at Page
 func (p Page) Count() int {
 	return p.count
 }
 
+// TotalRecords is the total records for the query
 func (p Page) TotalRecords() int {
 	return p.totalRecords
 }
 
+// TotalPages is the total number of pages calculated as TotalRecords / Limit
 func (p Page) TotalPages() int {
 	if p.totalRecords == 0 {
 		return 0
@@ -84,6 +87,7 @@ func (p Page) HasPages() bool {
 	return p.TotalPages() > 1
 }
 
+// Skip is the offset number used in the mgo query
 func (p Page) Skip() int {
 	if p.No == 1 {
 		return 0
