@@ -79,6 +79,11 @@ func (p Page) TotalPages() int {
 	return int(math.Ceil(float64(p.totalRecords) / float64(p.Limit)))
 }
 
+// HasPages returns true if there are more than 1 TotalPages
+func (p Page) HasPages() bool {
+	return p.TotalPages() > 1
+}
+
 func (p Page) Skip() int {
 	if p.No == 1 {
 		return 0
