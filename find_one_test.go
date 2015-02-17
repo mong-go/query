@@ -3,7 +3,7 @@ package query
 import "github.com/gomon/mongod"
 import "testing"
 import "gopkg.in/mgo.v2/bson"
-import "github.com/nowk/assert"
+import "gopkg.in/nowk/assert.v2"
 
 func TestFindOneFound(t *testing.T) {
 	m := mongod.New(databasename)
