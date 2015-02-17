@@ -1,17 +1,17 @@
 package query
 
-import "github.com/gomon/mongod"
 import "testing"
 import "gopkg.in/mgo.v2/bson"
 import "gopkg.in/nowk/assert.v2"
 
 func TestFindOneFound(t *testing.T) {
-	m := mongod.New(databasename)
-	db, err := m.Start()
-	if err != nil {
+	db, teardown := Setup(t)
+	defer teardown()
+	if err := UserFactory(db, func(u *User) {
+		u.Name = "Batman"
+	}); err != nil {
 		t.Fatal(err)
 	}
-	defer m.Stop(cleandb)
 
 	var user User
 	users := db.C("users")
@@ -22,12 +22,8 @@ func TestFindOneFound(t *testing.T) {
 }
 
 func TestFindOneNotFound(t *testing.T) {
-	m := mongod.New(databasename)
-	db, err := m.Start()
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer m.Stop(cleandb)
+	db, teardown := Setup(t)
+	defer teardown()
 
 	var user User
 	users := db.C("users")
