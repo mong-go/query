@@ -45,11 +45,10 @@ Provides functionality for pagination.
     // page.TotalRecords() => totals returned for the query
     // page.TotalPages()   => total pages
 
-Query the next or previous pages
+Next/Prev pages
 
-    p2, err := query.Paginate(q, &u, p1.NextPage())
-
-    p1, err := query.Paginate(q, &u, p2.PrevPage())
+    page.NextPage() // New Page incremented or nil (if at the end of pages)
+    page.PrevPage() // New Page decremented or nil (if at the first page)
     
 
 ## License
