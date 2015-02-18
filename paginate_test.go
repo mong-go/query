@@ -157,6 +157,11 @@ func TestNewPaginationReturnsPaginated(t *testing.T) {
 	p, err := NewPagination(qry, &d, &Page{
 		No:    2,
 		Limit: 3,
+	}, func(p *Paginated) {
+		p.URL = &url.URL{
+			Path:     "/users/superhero",
+			RawQuery: "foo=bar",
+		}
 	})
 	assert.Nil(t, err)
 	assert.Equal(t, 2, p.No)
@@ -165,4 +170,8 @@ func TestNewPaginationReturnsPaginated(t *testing.T) {
 	assert.Equal(t, 5, p.TotalRecords())
 	assert.Equal(t, 2, p.TotalPages())
 	assert.Equal(t, p.Count(), len(*p.Results.(*[]User)))
+	assert.Equal(t, "/users/superhero?foo=bar", p.URL.String())
+	assert.Equal(t, "/users/superhero?foo=bar&page=2&per_page=3", p.PageURL())
+	assert.Equal(t, "/users/superhero?foo=bar&page=1&per_page=3", p.PrevPageURL())
+	assert.Equal(t, "", p.NextPageURL())
 }
