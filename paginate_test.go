@@ -146,3 +146,23 @@ func TestParsePageReturnsPageFromRequestQueries(t *testing.T) {
 		}, page)
 	}
 }
+
+func TestNewPaginationReturnsPaginated(t *testing.T) {
+	db, teardown := Setup(t)
+	defer teardown()
+	seed(t, db)
+
+	var d []User
+	qry := db.C("users").Find(bson.M{})
+	p, err := NewPagination(qry, &d, &Page{
+		No:    2,
+		Limit: 3,
+	})
+	assert.Nil(t, err)
+	assert.Equal(t, 2, p.No)
+	assert.Equal(t, 3, p.Limit)
+	assert.Equal(t, 2, p.Count())
+	assert.Equal(t, 5, p.TotalRecords())
+	assert.Equal(t, 2, p.TotalPages())
+	assert.Equal(t, p.Count(), len(*p.Results.(*[]User)))
+}

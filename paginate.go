@@ -56,6 +56,30 @@ func ParsePage(req *http.Request) *Page {
 	})
 }
 
+// Paginated is a simple struct to pass to templates to keep Page data and
+// queried results in a single object.
+type Paginated struct {
+	*Page
+
+	// Results should be []<T> of some sort
+	Results interface{}
+}
+
+// NewPagination calls Paginate and returns a Paginated object
+func NewPagination(qry *mgo.Query, d interface{}, page *Page) (*Paginated,
+	error) {
+
+	p, err := Paginate(qry, d, page)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Paginated{
+		Page:    p,
+		Results: d,
+	}, nil
+}
+
 // Paginate maps an executed query to d and calculates pagination data returning
 // it as Page
 func Paginate(qry *mgo.Query, d interface{}, page *Page) (*Page, error) {
