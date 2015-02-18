@@ -57,65 +57,6 @@ func ParsePage(req *http.Request) *Page {
 	})
 }
 
-// Paginated is a simple struct to pass to templates to keep Page data and
-// queried results in a single object.
-type Paginated struct {
-	*Page
-
-	// Results should be []<T> of some sort
-	Results interface{}
-
-	// URL is used to generate page URLs
-	URL *url.URL
-}
-
-// NewPagination calls Paginate and returns a Paginated object
-func NewPagination(qry *mgo.Query, d interface{}, page *Page,
-	opts ...func(*Paginated)) (*Paginated, error) {
-
-	p, err := Paginate(qry, d, page)
-	if err != nil {
-		return nil, err
-	}
-
-	pd := &Paginated{
-		Page:    p,
-		Results: d,
-	}
-	for _, v := range opts {
-		v(pd)
-	}
-	return pd, nil
-}
-
-func (p Paginated) pageqs(page *Page) url.Values {
-	q := p.URL.Query()
-	q.Set("page", strconv.FormatInt(int64(page.No), 10))
-	q.Set("per_page", strconv.FormatInt(int64(page.Limit), 10))
-	return q
-}
-
-func (p Paginated) pageURL(page *Page) string {
-	if page == nil {
-		return ""
-	}
-
-	p.URL.RawQuery = p.pageqs(page).Encode()
-	return p.URL.String()
-}
-
-func (p Paginated) PageURL() string {
-	return p.pageURL(p.Page)
-}
-
-func (p Paginated) NextPageURL() string {
-	return p.pageURL(p.NextPage())
-}
-
-func (p Paginated) PrevPageURL() string {
-	return p.pageURL(p.PrevPage())
-}
-
 // Paginate maps an executed query to d and calculates pagination data returning
 // it as Page
 func Paginate(qry *mgo.Query, d interface{}, page *Page) (*Page, error) {
@@ -190,4 +131,63 @@ func (p Page) PrevPage() *Page {
 	}
 
 	return NewPage(p.No-1, p.Limit)
+}
+
+// Paginated is a simple struct to pass to templates to keep Page data and
+// queried results in a single object.
+type Paginated struct {
+	*Page
+
+	// Results should be []<T> of some sort
+	Results interface{}
+
+	// URL is used to generate page URLs
+	URL *url.URL
+}
+
+// NewPagination calls Paginate and returns a Paginated object
+func NewPagination(qry *mgo.Query, d interface{}, page *Page,
+	opts ...func(*Paginated)) (*Paginated, error) {
+
+	p, err := Paginate(qry, d, page)
+	if err != nil {
+		return nil, err
+	}
+
+	pd := &Paginated{
+		Page:    p,
+		Results: d,
+	}
+	for _, v := range opts {
+		v(pd)
+	}
+	return pd, nil
+}
+
+func (p Paginated) pageqs(page *Page) url.Values {
+	q := p.URL.Query()
+	q.Set("page", strconv.FormatInt(int64(page.No), 10))
+	q.Set("per_page", strconv.FormatInt(int64(page.Limit), 10))
+	return q
+}
+
+func (p Paginated) pageURL(page *Page) string {
+	if page == nil {
+		return ""
+	}
+
+	p.URL.RawQuery = p.pageqs(page).Encode()
+	return p.URL.String()
+}
+
+func (p Paginated) PageURL() string {
+	return p.pageURL(p.Page)
+}
+
+func (p Paginated) NextPageURL() string {
+	return p.pageURL(p.NextPage())
+}
+
+func (p Paginated) PrevPageURL() string {
+	return p.pageURL(p.PrevPage())
 }
