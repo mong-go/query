@@ -3,7 +3,9 @@ package query
 import (
 	"gopkg.in/mgo.v2"
 	"math"
+	"net/http"
 	"reflect"
+	"strconv"
 )
 
 const (
@@ -37,6 +39,20 @@ func NewPage(n, lmt int) *Page {
 	return checkPage(&Page{
 		No:    n,
 		Limit: lmt,
+	})
+}
+
+// ParsePage is a helper to parse query values of page and per_page params. This
+// ignores any strconv errors and returns default values with a passe through
+// checkPage()
+func ParsePage(req *http.Request) *Page {
+	q := req.URL.Query()
+	n, _ := strconv.ParseInt(q.Get("page"), 10, 64)
+	l, _ := strconv.ParseInt(q.Get("per_page"), 10, 64)
+
+	return checkPage(&Page{
+		No:    int(n),
+		Limit: int(l),
 	})
 }
 

@@ -5,6 +5,8 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"gopkg.in/nowk/assert.v2"
+	"net/http"
+	"net/url"
 	"testing"
 )
 
@@ -114,5 +116,33 @@ func TestPrevPage(t *testing.T) {
 			No:    1,
 			Limit: 6,
 		}, p.PrevPage())
+	}
+}
+
+func TestParsePageReturnsPageFromRequestQueries(t *testing.T) {
+	{
+		req := &http.Request{
+			URL: &url.URL{
+				RawQuery: "page=2&per_page=12",
+			},
+		}
+
+		page := ParsePage(req)
+		assert.Equal(t, &Page{
+			No:    2,
+			Limit: 12,
+		}, page)
+	}
+
+	{
+		req := &http.Request{
+			URL: &url.URL{},
+		}
+
+		page := ParsePage(req)
+		assert.Equal(t, &Page{
+			No:    1,
+			Limit: 30,
+		}, page)
 	}
 }
