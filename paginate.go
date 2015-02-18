@@ -21,7 +21,7 @@ type Page struct {
 	totalRecords int
 }
 
-func check(p *Page) *Page {
+func checkPage(p *Page) *Page {
 	if p.No == 0 {
 		p.No = 1
 	}
@@ -34,7 +34,7 @@ func check(p *Page) *Page {
 }
 
 func NewPage(n, lmt int) *Page {
-	return check(&Page{
+	return checkPage(&Page{
 		No:    n,
 		Limit: lmt,
 	})
@@ -43,7 +43,7 @@ func NewPage(n, lmt int) *Page {
 // Paginate maps an executed query to d and calculates pagination data returning
 // it as Page
 func Paginate(qry *mgo.Query, d interface{}, page *Page) (*Page, error) {
-	p := *check(page)
+	p := *checkPage(page)
 
 	n, err := qry.Count()
 	if err != nil {
