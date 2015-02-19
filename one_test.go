@@ -4,7 +4,7 @@ import "testing"
 import "gopkg.in/mgo.v2/bson"
 import "gopkg.in/nowk/assert.v2"
 
-func TestFindOneFound(t *testing.T) {
+func TestOneFound(t *testing.T) {
 	db, teardown := Setup(t)
 	defer teardown()
 	if err := UserFactory(db, func(u *User) {
@@ -14,21 +14,17 @@ func TestFindOneFound(t *testing.T) {
 	}
 
 	var user User
-	users := db.C("users")
-	qry := users.Find(bson.M{"name": "Batman"})
-	found, err := FindOne(qry, &user)
-	assert.True(t, found)
+	ok, err := One(db, &user, bson.M{"name": "Batman"})
 	assert.Nil(t, err)
+	assert.True(t, ok)
 }
 
-func TestFindOneNotFound(t *testing.T) {
+func TestOneNotFound(t *testing.T) {
 	db, teardown := Setup(t)
 	defer teardown()
 
 	var user User
-	users := db.C("users")
-	qry := users.Find(bson.M{"name": "Robin"})
-	found, err := FindOne(qry, &user)
-	assert.False(t, found)
+	ok, err := One(db, &user, bson.M{"name": "Robin"})
 	assert.Nil(t, err)
+	assert.False(t, ok)
 }

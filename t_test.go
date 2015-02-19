@@ -2,11 +2,18 @@ package query
 
 import "gopkg.in/mong-go/mongod.v1"
 import "gopkg.in/mgo.v2"
+import "gopkg.in/mong-go/model.v0"
 import "testing"
 
 type User struct {
 	Name string `name`
 }
+
+func (User) Collection() string {
+	return "users"
+}
+
+var _ model.ModelReader = &User{}
 
 const databasename = "query_test"
 
