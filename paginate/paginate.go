@@ -8,8 +8,6 @@ import (
 
 // Paginate queries all on to d @ Page
 func Paginate(qry *mgo.Query, d interface{}, page *Page) error {
-	page = checkPage(page)
-
 	var err error
 	qry, err = page.Query(qry)
 	if err != nil {
