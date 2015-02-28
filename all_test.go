@@ -1,10 +1,11 @@
 package query
 
 import (
+	"testing"
+
 	"gopkg.in/mgo.v2/bson"
 	"gopkg.in/mong-go/model.v0"
 	"gopkg.in/nowk/assert.v2"
-	"testing"
 )
 
 type Users []User

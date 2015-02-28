@@ -1,9 +1,12 @@
 package query
 
-import "gopkg.in/mong-go/mongod.v1"
-import "gopkg.in/mgo.v2"
-import "gopkg.in/mong-go/model.v0"
-import "testing"
+import (
+	"testing"
+
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mong-go/model.v0"
+	"gopkg.in/mong-go/mongod.v1"
+)
 
 type User struct {
 	Name string `name`

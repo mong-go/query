@@ -1,9 +1,10 @@
 package query
 
 import (
+	"testing"
+
 	"gopkg.in/mgo.v2/bson"
 	"gopkg.in/nowk/assert.v2"
-	"testing"
 )
 
 func TestOneFound(t *testing.T) {
