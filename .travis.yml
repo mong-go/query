@@ -3,6 +3,7 @@ install:
   - go get gopkg.in/nowk/assert.v2
   - go get gopkg.in/mong-go/model.v0
   - go get gopkg.in/mong-go/mongod.v1
+  - go get gopkg.in/mong-go/query.v2/paginate
   - go get gopkg.in/mgo.v2
 services:
   - mongodb
