@@ -2,7 +2,7 @@ package paginate
 
 import (
 	"math"
-	"net/http"
+	"net/url"
 	"strconv"
 )
 
@@ -76,8 +76,8 @@ func checkPage(p *Page) *Page {
 
 // ParsePage is a helper to return a page by parsing url query values
 // eg. http://example.com/posts?page=2&per_page=100
-func ParsePage(req *http.Request) *Page {
-	q := req.URL.Query()
+func ParsePage(u *url.URL) *Page {
+	q := u.Query()
 	n, _ := strconv.ParseInt(q.Get("page"), 10, 64)
 	l, _ := strconv.ParseInt(q.Get("per_page"), 10, 64)
 

@@ -98,7 +98,7 @@ func TestParsePageReturnsPageFromRequestQueries(t *testing.T) {
 			},
 		}
 
-		page := ParsePage(req)
+		page := ParsePage(req.URL)
 		assert.Equal(t, &Page{
 			No:    2,
 			Limit: 12,
@@ -109,7 +109,7 @@ func TestParsePageReturnsPageFromRequestQueries(t *testing.T) {
 			URL: &url.URL{},
 		}
 
-		page := ParsePage(req)
+		page := ParsePage(req.URL)
 		assert.Equal(t, &Page{
 			No:    1,
 			Limit: 30,
