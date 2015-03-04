@@ -1,80 +1,81 @@
 # query
 
-[![Build Status](https://travis-ci.org/mong-go/query.svg?branch=master)](https://travis-ci.org/mong-go/query)
-[![GoDoc](https://godoc.org/gopkg.in/mong-go/query.v1?status.svg)](http://godoc.org/gopkg.in/mong-go/query.v1)
+[![Build Status](https://travis-ci.org/mong-go/query.svg?branch=master)](https://travis-ci.org/mong-go/query) [![GoDoc](https://godoc.org/gopkg.in/mong-go/query.v2?status.svg)](http://godoc.org/gopkg.in/mong-go/query.v2)
 
 mgo query utilities
 
 ## Install
 
-    go get gopkg.in/mong-go/query.v1
+    go get gopkg.in/mong-go/query.v2
 
 ## Usage
 
-__FindOne__
+One/All funcs require `mong-go/model`'s `ModelReader` interface.
 
-Supresses the `not found` error and provides a `bool` indicating *found* or *not found*.
+    type User struct {
+      Name string
+    }
 
-    q := db.C("users").Find(bson.M{"name": "Batman"})
-    ok, err := query.FindOne(q, &user)
+    func (User) Collection() String {
+      return "users"
+    }
+
+__One__
+
+`One` is a wrapper around `mgo`'s own `One` func which supresses the `not found` error and provides a `bool` indicating *found* or *not found*.
+
+    var u User
+    ok, err := query.One(&u, bson.M{"name": "Batman"}, db)
+    if err != nil {
+      // handle error
+    }
+    if !ok {
+      // handle not found
+    }
+
+---
+
+__All__
+
+`All` is a general wrapper around `mgo`'s own `All` func.
+
+    type Users []User
+
+    func (Users) Collection() string {
+      return "users"
+    }
+
+    var u Users
+    err := query.All(&u, bson.M{}, db)
     if err != nil {
       // handle error
     }
 
-    if ok {
-      // handle found
-      return
-    }
-
-    // handle not found
-
-
 ---
 
-__Paginate__
+#### /paginate
 
-Provides functionality for pagination.
+The `paginate` package provides utilities for pagination.
 
-    q := db.C("users").Find(bson.M{})
-    var u []User
-    page, err := query.Paginate(q, &u, &query.Page{
-      No:    1,
+    import "gopkg.in/mong-go/query.v2/paginate"
+
+    pg := &paginate.Page{
+      No: 2,
       Limit: 30,
+    }
+
+    var u Users
+    err := query.All(&u, bson.M{}, db, func(qry *mgo.Query) (*mgo.Query, error) {
+      return paginate.Query(qry.Sort("+name"), pg)
     })
 
-    // page.Count()        => totals returned for the given page
-    // page.TotalRecords() => totals returned for the query
-    // page.TotalPages()   => total pages
+    // pg.TotalRecords() => totals returned for the query
+    // pg.TotalPages()   => total pages
 
 Next/Prev pages
 
-    page.NextPage() // New Page incremented or nil (if at the end of pages)
-    page.PrevPage() // New Page decremented or nil (if at the first page)
-
-
----
-
-__NewPagination__
-
-Returns a `Paginated` object which contains the results, Page info and URL object to easily create pagination within your templates
-
-    q := db.C("users").Find(bson.M{})
-    var u []User
-    p, err := query.NewPagination(q, &u, query.ParsePage(req), func(p *query.Paginated) {
-      p.URL = &url.URL{
-        Path:     "/users",
-        RawQuery: "keyword=superheros",
-      }
-    })
-
-    // p.Results       => interface{} (*[]User)
-    // p.Page          => *query.Page (what is returned through Paginate)
-    // p.PageURL()     => /users?keyword=superheros&page=2&per_page=30
-    // p.NextPageURL() => /users?keyword=superheros&page=3&per_page=30
-    // p.PrevPageURL() => /users?keyword=superheros&page=1&per_page=30
-
-*`NextPageURL` and `PrevPageURL` will return `""` if there is no next/prev page.*
-
+    pg.NextPage() // New Page incremented or nil (if at the end of pages)
+    pg.PrevPage() // New Page decremented or nil (if at the first page)
 
 ---
 
@@ -82,10 +83,14 @@ __ParsePage__
 
 Small utility to return a `*Page` by parsing your URL querystring for `page` and `per_page` parameters.
 
-    page := query.ParsePage(req)
+    http://example.com/posts?page=3&per_page=50
 
-    // page.No    => req.URL.Query().Get("page")
-    // page.Limit => req.URL.Query().Get("per_page")
+Parsing results in
+
+    pg := paginate.ParsePage(req)
+
+    // pg.No    => 3
+    // pg.Limit => 50
 
 
 ## License
