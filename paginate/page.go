@@ -82,7 +82,7 @@ const PerPageLimit = 30
 
 // checkPage checks that a page is at least 1 and limit is > 0
 func checkPage(p *Page) *Page {
-	if p.No == 0 {
+	if p.No <= 0 {
 		p.No = 1
 	}
 	if p.Limit <= 0 {

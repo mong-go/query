@@ -118,3 +118,17 @@ func TestParsePageReturnsPageFromRequestQueries(t *testing.T) {
 		}, page)
 	}
 }
+
+func TestCheckPageReturnsDefaultsWhen0orLess(t *testing.T) {
+	for _, v := range []int{
+		-1,
+		0,
+	} {
+		pg := checkPage(&Page{
+			No:    v,
+			Limit: v,
+		})
+		assert.Equal(t, 1, pg.No)
+		assert.Equal(t, PerPageLimit, pg.Limit)
+	}
+}
