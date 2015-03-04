@@ -6,7 +6,7 @@ import (
 
 // Paginate paginates on query
 func Paginate(qry *mgo.Query, pg *Page, d interface{}) error {
-	qry, err := pg.Query(qry)
+	qry, err := Query(qry, pg)
 	if err != nil {
 		return err
 	}

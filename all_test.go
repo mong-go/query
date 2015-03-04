@@ -64,7 +64,7 @@ func TestAllWithPaginate(t *testing.T) {
 
 	var d Users
 	err := All(&d, bson.M{}, db, func(qry *mgo.Query) (*mgo.Query, error) {
-		return page.Query(qry)
+		return paginate.Query(qry, page)
 	})
 	if err != nil {
 		t.Fatal(err)

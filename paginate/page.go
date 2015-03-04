@@ -4,8 +4,6 @@ import (
 	"math"
 	"net/http"
 	"strconv"
-
-	"gopkg.in/mgo.v2"
 )
 
 type Page struct {
@@ -60,11 +58,6 @@ func (p Page) PrevPage() *Page {
 		return nil
 	}
 	return NewPage(p.No-1, p.Limit)
-}
-
-// Query is a short for Query bound to this Page
-func (p *Page) Query(qry *mgo.Query) (*mgo.Query, error) {
-	return Query(qry, p)
 }
 
 // PerPageLimit is the default per/page limit
