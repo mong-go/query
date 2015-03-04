@@ -12,23 +12,21 @@ func TestPageMaths(t *testing.T) {
 	for _, v := range []struct {
 		No           int
 		Limit        int
-		Count        int
 		TotalRecords int
 
 		tTotalPages int
 		tSkip       int
 	}{
-		{1, 2, 2, 5 /**/, 3, 0},
-		{2, 2, 2, 5 /**/, 3, 2},
-		{3, 2, 1, 5 /**/, 3, 4},
-		{1, 8, 8, 8 /**/, 1, 0}, // query count matches page limit
-		{1, 5, 0, 0 /**/, 0, 0}, // no results
+		{1, 2, 5 /**/, 3, 0},
+		{2, 2, 5 /**/, 3, 2},
+		{3, 2, 5 /**/, 3, 4},
+		{1, 8, 8 /**/, 1, 0}, // query count matches page limit
+		{1, 5, 0 /**/, 0, 0}, // no results
 	} {
 		page := Page{
 			No:    v.No,
 			Limit: v.Limit,
 
-			count:        v.Count,
 			totalRecords: v.TotalRecords,
 		}
 

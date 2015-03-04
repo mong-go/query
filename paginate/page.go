@@ -13,10 +13,6 @@ type Page struct {
 	Limit int
 
 	totalRecords int
-
-	// count only set through the Paginate function. Without being able to
-	// actually run the query there is no way to obtain this number.
-	count int
 }
 
 func NewPage(no, lmt int) *Page {
@@ -24,12 +20,6 @@ func NewPage(no, lmt int) *Page {
 		No:    no,
 		Limit: lmt,
 	})
-}
-
-// Count returns the result count for the given page, this can be less than the
-// Limit. *This is only set when using the Paginate function.*
-func (p Page) Count() int {
-	return p.count
 }
 
 func (p Page) TotalRecords() int {
