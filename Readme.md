@@ -87,7 +87,7 @@ Small utility to return a `*Page` by parsing your URL querystring for `page` and
 
 Parsing results in
 
-    pg := paginate.ParsePage(req)
+    pg := paginate.ParsePage(req.URL)
 
     // pg.No    => 3
     // pg.Limit => 50
