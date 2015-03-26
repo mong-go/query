@@ -2,13 +2,12 @@ package query
 
 import (
 	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
 	"gopkg.in/mong-go/model.v0"
 )
 
 // One is a wrapper around mgo's One to supress "not found" error and return a
 // boolean indicating "found" vs "not found".
-func One(d model.ModelReader, b bson.M, db *mgo.Database,
+func One(d model.ModelReader, b interface{}, db *mgo.Database,
 	opts ...QueryFunc) (bool, error) {
 
 	qry, err := BuildQuery(d, b, db, opts...)
