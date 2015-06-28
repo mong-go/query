@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"gopkg.in/mgo.v2"
-	"gopkg.in/mong-go/model.v0"
+	"gopkg.in/mong-go/model.v1"
 	"gopkg.in/mong-go/mongod.v1"
 )
 
@@ -12,7 +12,7 @@ type User struct {
 	Name string `name`
 }
 
-func (User) Collection() string {
+func (User) CollectionName() string {
 	return "users"
 }
 

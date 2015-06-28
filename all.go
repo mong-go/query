@@ -2,7 +2,7 @@ package query
 
 import (
 	"gopkg.in/mgo.v2"
-	"gopkg.in/mong-go/model.v0"
+	"gopkg.in/mong-go/model.v1"
 )
 
 func All(d model.ModelReader, b interface{}, db *mgo.Database,

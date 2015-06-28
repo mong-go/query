@@ -2,7 +2,7 @@ package query
 
 import (
 	"gopkg.in/mgo.v2"
-	"gopkg.in/mong-go/model.v0"
+	"gopkg.in/mong-go/model.v1"
 )
 
 // One is a wrapper around mgo's One to supress "not found" error and return a

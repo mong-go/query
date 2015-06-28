@@ -5,14 +5,14 @@ import (
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"gopkg.in/mong-go/model.v0"
-	"gopkg.in/mong-go/query.v2/paginate"
+	"gopkg.in/mong-go/model.v1"
+	"gopkg.in/mong-go/query.v3/paginate"
 	"gopkg.in/nowk/assert.v2"
 )
 
 type Users []User
 
-func (Users) Collection() string {
+func (Users) CollectionName() string {
 	return "users"
 }
 
